@@ -12,11 +12,13 @@
         
         try {
             socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
-            
-            $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
-            
-            $self->session_id =  hexdec( $u['h6'].$u['h5'] );
-            return $self->checkValid( $self->data_recv );
+            if ( strlen( $self->data_recv ) > 0 ) {
+                $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
+                
+                $self->session_id =  hexdec( $u['h6'].$u['h5'] );
+                return $self->checkValid( $self->data_recv );
+            } else 
+                return FALSE;
         } catch(exception $e) {
             return FALSE;
         }
