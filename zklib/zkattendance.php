@@ -65,25 +65,27 @@
             }
             
             $attendancedata = implode( '', $self->attendancedata );
-            $attendancedata = substr( $attendancedata, 14 );
+            $attendancedata = substr( $attendancedata, 10 );
             
             while ( strlen($attendancedata) > 40 ) {
                 
-                $u = unpack( 'H80', substr( $attendancedata, 0, 40 ) );
+                $u = unpack( 'H78', substr( $attendancedata, 0, 39 ) );
                 //24s1s4s11s
                 //print_r($u);
-                $uid = hex2bin( substr( $u[1], 0, 24 ) );
+
+                $uid = hexdec( substr( $u[1], 0, 6 ) );
                 $uid = explode(chr(0), $uid);
                 $uid = intval( $uid[0] ); 
-                $state = hexdec( substr( $u[1], 48, 2 ) );
-                $timestamp = decode_time( hexdec( reverseHex( substr($u[1], 50, 8) ) ) ); 
+                $id = hex2bin( substr($u[1], 6, 6) );
+                $state = hexdec( substr( $u[1], 56, 2 ) );
+                $timestamp = decode_time( hexdec( reverseHex( substr($u[1], 58, 8) ) ) ); 
                 
                 # Clean up some messy characters from the user name
                 #uid = unicode(uid.strip('\x00|\x01\x10x'), errors='ignore')
                 #uid = uid.split('\x00', 1)[0]
                 #print "%s, %s, %s" % (uid, state, decode_time( int( reverseHex( timestamp.encode('hex') ), 16 ) ) )
                 
-                array_push( $attendance, array( $uid, $state, $timestamp ) );
+                array_push( $attendance, array( $uid, $id, $state, $timestamp ) );
                 
                 $attendancedata = substr( $attendancedata, 40 );
             }

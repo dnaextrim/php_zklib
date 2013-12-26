@@ -4,7 +4,7 @@
         public $port;
         public $zkclient;
         
-        public $data_rcv = '';
+        public $data_recv = '';
         public $session_id = 0;
         public $userdata = array();
         public $attendancedata = array();

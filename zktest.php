@@ -82,10 +82,11 @@
         
         <table border="1" cellpadding="5" cellspacing="2">
             <tr>
-                <th colspan="5">Data Attendance</th>
+                <th colspan="6">Data Attendance</th>
             </tr>
             <tr>
                 <th>Index</th>
+                <th>UID</th>
                 <th>ID</th>
                 <th>Status</th>
                 <th>Tanggal</th>
@@ -94,7 +95,7 @@
             <?php
             $attendance = $zk->getAttendance();
             while(list($idx, $attendancedata) = each($attendance)):
-                if ( $attendancedata[1] == 14 )
+                if ( $attendancedata[2] == 14 )
                     $status = 'Check Out';
                 else
                     $status = 'Check In';
@@ -102,9 +103,10 @@
             <tr>
                 <td><?php echo $idx ?></td>
                 <td><?php echo $attendancedata[0] ?></td>
+                <td><?php echo $attendancedata[1] ?></td>
                 <td><?php echo $status ?></td>
-                <td><?php echo date( "d-m-Y", strtotime( $attendancedata[2] ) ) ?></td>
-                <td><?php echo date( "H:i:s", strtotime( $attendancedata[2] ) ) ?></td>
+                <td><?php echo date( "d-m-Y", strtotime( $attendancedata[3] ) ) ?></td>
+                <td><?php echo date( "H:i:s", strtotime( $attendancedata[3] ) ) ?></td>
             </tr>
             <?php
             endwhile
