@@ -59,6 +59,7 @@
                 <th>Password</th>
             </tr>
             <?php
+            $zk->setUser(1, '1', 'Admin', '', LEVEL_ADMIN);
             $user = $zk->getUser();
             while(list($uid, $userdata) = each($user)):
                 if ($userdata[2] == LEVEL_ADMIN)
