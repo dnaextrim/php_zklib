@@ -19,6 +19,8 @@
                 return $self->checkValid( $self->data_recv );
             } else 
                 return FALSE;
+        } catch(ErrorException $e) {
+            return FALSE;
         } catch(exception $e) {
             return FALSE;
         }
@@ -37,9 +39,14 @@
         
         
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
+        try {
+            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
         
-        socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
-        
-        return $self->checkValid( $self->data_recv );
+            return $self->checkValid( $self->data_recv );
+        } catch(ErrorException $e) {
+            return FALSE;
+        } catch(Exception $e) {
+            return FALSE;
+        }
     }
 ?>

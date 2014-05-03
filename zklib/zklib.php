@@ -15,7 +15,7 @@
             
             $this->zkclient = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
             
-            $timeout = array('sec'=>3,'usec'=>500000);
+            $timeout = array('sec'=>60,'usec'=>500000);
             socket_set_option($this->zkclient,SOL_SOCKET,SO_RCVTIMEO,$timeout);
         
             include_once("zkconst.php");

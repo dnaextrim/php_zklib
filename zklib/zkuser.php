@@ -35,6 +35,8 @@
             
             $self->session_id =  hexdec( $u['h6'].$u['h5'] );
             return substr( $self->data_recv, 8 );
+        } catch(ErrorException $e) {
+            return FALSE;
         } catch(exception $e) {
             return False;
         }
@@ -112,6 +114,8 @@
             }
             
             return $users;
+        } catch(ErrorException $e) {
+            return FALSE;
         } catch(exception $e) {
             return False;
         }
@@ -137,6 +141,8 @@
             
             $self->session_id =  hexdec( $u['h6'].$u['h5'] );
             return substr( $self->data_recv, 8 );
+        } catch(ErrorException $e) {
+            return FALSE;
         } catch(exception $e) {
             return False;
         }
@@ -162,6 +168,8 @@
             
             $self->session_id =  hexdec( $u['h6'].$u['h5'] );
             return substr( $self->data_recv, 8 );
+        } catch(ErrorException $e) {
+            return FALSE;
         } catch(exception $e) {
             return False;
         }
