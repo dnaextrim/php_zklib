@@ -12,7 +12,7 @@
     $ret = $zk->connect();
     sleep(1);
     if ( $ret ): 
-        //$zk->disableDevice();
+        $zk->disableDevice();
         sleep(1);
     ?>
         
@@ -21,31 +21,31 @@
                 <td><b>Status</b></td>
                 <td>Connected</td>
                 <td><b>Version</b></td>
-                <td><?php //echo $zk->version() ?></td>
+                <td><?php echo $zk->version() ?></td>
                 <td><b>OS Version</b></td>
                 <td><?php echo $zk->osversion() ?></td>
                 <td><b>Platform</b></td>
-                <td><?php //echo $zk->platform() ?></td>
+                <td><?php echo $zk->platform() ?></td>
             </tr>
             <tr>
                 <td><b>Firmware Version</b></td>
-                <td><?php //echo $zk->fmVersion() ?></td>
+                <td><?php echo $zk->fmVersion() ?></td>
                 <td><b>WorkCode</b></td>
-                <td><?php //echo $zk->workCode() ?></td>
+                <td><?php echo $zk->workCode() ?></td>
                 <td><b>SSR</b></td>
-                <td><?php //echo $zk->ssr() ?></td>
+                <td><?php echo $zk->ssr() ?></td>
                 <td><b>Pin Width</b></td>
-                <td><?php //echo $zk->pinWidth() ?></td>
+                <td><?php echo $zk->pinWidth() ?></td>
             </tr>
             <tr>
                 <td><b>Face Function On</b></td>
-                <td><?php //echo $zk->faceFunctionOn() ?></td>
+                <td><?php echo $zk->faceFunctionOn() ?></td>
                 <td><b>Serial Number</b></td>
-                <td><?php //echo $zk->serialNumber() ?></td>
+                <td><?php echo $zk->serialNumber() ?></td>
                 <td><b>Device Name</b></td>
-                <td><?php //echo $zk->deviceName(); ?></td>
+                <td><?php echo $zk->deviceName(); ?></td>
                 <td><b>Get Time</b></td>
-                <td><?php //echo $zk->getTime() ?></td>
+                <td><?php echo $zk->getTime() ?></td>
             </tr>
         </table>
         <hr />
@@ -87,7 +87,7 @@
                 header("HTTP/1.0 404 Not Found");
                 header('HTTP', true, 500); // 500 internal server error                
             }
-            $zk->clearAdmin();
+            //$zk->clearAdmin();
             ?>
         </table>
         
@@ -179,7 +179,7 @@
         
         </fieldset>
     <?php
-        //$zk->enableDevice();
+        $zk->enableDevice();
         sleep(1);
         $zk->disconnect();
     endif
