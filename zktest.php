@@ -7,7 +7,7 @@
 <?php
     include("zklib/zklib.php");
     
-    $zk = new ZKLib("192.168.20.10", 4370);
+    $zk = new ZKLib("192.168.1.201", 4370);
     
     $ret = $zk->connect();
     sleep(1);

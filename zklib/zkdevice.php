@@ -13,7 +13,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
@@ -40,7 +40,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
@@ -67,7 +67,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             

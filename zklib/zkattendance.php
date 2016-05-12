@@ -42,18 +42,18 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         //try {
-        socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+        @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
         
         if ( getSizeAttendance($self) ) {
             $bytes = getSizeAttendance($self);
             while ( $bytes > 0 ) {
-                socket_recvfrom($self->zkclient, $data_recv, 1032, 0, $self->ip, $self->port);
+                @socket_recvfrom($self->zkclient, $data_recv, 1032, 0, $self->ip, $self->port);
                 array_push( $self->attendancedata, $data_recv);
                 $bytes -= 1024;
             }
             
             $self->session_id =  hexdec( $u['h6'].$u['h5'] );
-            socket_recvfrom($self->zkclient, $data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $data_recv, 1024, 0, $self->ip, $self->port);
         }
         
         $attendance = array();  
@@ -73,9 +73,12 @@
                 //24s1s4s11s
                 //print_r($u);
 
-                $uid = hexdec( substr( $u[1], 0, 6 ) );
-                $uid = explode(chr(0), $uid);
-                $uid = intval( $uid[0] ); 
+                //$uid = hexdec( substr( $u[1], 0, 6 ) );
+                //$uid = explode(chr(0), $uid);
+                //$uid = intval( $uid[0] );
+                $u1 = hexdec( substr($u[1], 4, 2) );
+                $u2 = hexdec( substr($u[1], 6, 2) );
+                $uid = $u1+($u2*256);
                 $id = intval( str_replace("\0", '', hex2bin( substr($u[1], 6, 8) ) ) );
                 $state = hexdec( substr( $u[1], 56, 2 ) );
                 $timestamp = decode_time( hexdec( reverseHex( substr($u[1], 58, 8) ) ) ); 
@@ -112,7 +115,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             

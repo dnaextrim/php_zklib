@@ -17,7 +17,10 @@
     
     function zksetuser($self, $uid, $userid, $name, $password, $role) {
         $command = CMD_SET_USER;
-        $command_string = str_pad(chr( $uid ), 2, chr(0)).chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        //$command_string = str_pad(chr( $uid ), 2, chr(0)).chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        $byte1 = chr((int)($uid % 256));
+        $byte2 = chr((int)($uid >> 8));
+        $command_string = $byte1.$byte2.chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
         $chksum = 0;
         $session_id = $self->session_id;
         
@@ -29,7 +32,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
@@ -56,7 +59,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
@@ -64,13 +67,13 @@
                 $bytes = getSizeUser($self);
                 
                 while ( $bytes > 0 ) {
-                    socket_recvfrom($self->zkclient, $data_recv, 1032, 0, $self->ip, $self->port);
+                    @socket_recvfrom($self->zkclient, $data_recv, 1032, 0, $self->ip, $self->port);
                     array_push( $self->userdata, $data_recv);
                     $bytes -= 1024;
                 }
                 
                 $self->session_id =  hexdec( $u['h6'].$u['h5'] );
-                socket_recvfrom($self->zkclient, $data_recv, 1024, 0, $self->ip, $self->port);
+                @socket_recvfrom($self->zkclient, $data_recv, 1024, 0, $self->ip, $self->port);
             }
             
             
@@ -89,8 +92,12 @@
                 while ( strlen($userdata) > 72 ) {
                     
                     $u = unpack( 'H144', substr( $userdata, 0, 72) );
-                    
-                    $uid = hexdec( substr($u[1], 0, 4) ).' '; 
+
+                    //$uid = hexdec( substr($u[1], 0, 4) ).' ';
+                    $u1 = hexdec( substr($u[1], 2, 2) );
+                    $u2 = hexdec( substr($u[1], 4, 2) );
+                    $uid = $u1+($u2*256);
+                    $cardno = hexdec( substr($u[1], 78, 2).substr($u[1], 76, 2).substr($u[1], 74, 2).substr($u[1], 72, 2) ).' '; 
                     $role = hexdec( substr($u[1], 4, 4) ).' '; 
                     $password = hex2bin( substr( $u[1], 8, 16 ) ).' '; 
                     $name = hex2bin( substr( $u[1], 24, 74 ) ). ' '; 
@@ -102,12 +109,13 @@
                     $userid = explode( chr(0), $userid, 2);
                     $userid = $userid[0];
                     $name = explode(chr(0), $name, 3);
-                    $name = $name[0];
+                    $name = utf8_encode($name[0]);
+                    $cardno = str_pad($cardno,11,'0',STR_PAD_LEFT);
                     
                     if ( $name == "" )
                         $name = $uid;
                     
-                    $users[$uid] = array($userid, $name, intval( $role ), $password);
+                    $users[$uid] = array($userid, $name, $cardno, $uid,intval( $role ), $password);
                     
                     $userdata = substr( $userdata, 72 );
                 }
@@ -135,7 +143,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
@@ -162,7 +170,7 @@
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
         
         try {
-            socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
