@@ -2,7 +2,7 @@
     "name": "krinn/ZKAttend",
     "type": "library",
     "description": "Biometric Attendance Machine Library for PHP",
-    "keywords": ["log","logging", ],
+    "keywords": ["biometric", "attendance","log","logging"],
     "homepage": "https://github.com/KRinnNet/ZKAttend",
     "license": "MIT",
     "authors": [
