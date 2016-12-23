@@ -1,4 +1,4 @@
-# PHP Biometric Attrendance Library
+# PHP Biometric Attendance Library
 
 Biometric Attendance Machine Library for PHP with a connection to the network using the UDP protocol and port 4370
 
