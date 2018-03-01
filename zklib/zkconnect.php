@@ -9,7 +9,9 @@
         $buf = $self->createHeader($command, $chksum, $session_id, $reply_id, $command_string);
         
         socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
-        
+        // socket_write($self->zkclient, $buf, strlen($buf));
+        // var_dump($this->zkclient);
+        // exit();
         try {
             @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
             if ( strlen( $self->data_recv ) > 0 ) {

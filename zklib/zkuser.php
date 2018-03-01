@@ -17,7 +17,7 @@
     
     function zksetuser($self, $uid, $userid, $name, $password, $role) {
         $command = CMD_SET_USER;
-        //$command_string = str_pad(chr( $uid ), 2, chr(0)).chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        // $command_string = str_pad(chr( $uid ), 2, chr(0)).chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
         $byte1 = chr((int)($uid % 256));
         $byte2 = chr((int)($uid >> 8));
         $command_string = $byte1.$byte2.chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
@@ -33,7 +33,8 @@
         
         try {
             @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
-            
+//            file_put_contents('set_user_binary_log', $self->data_recv.PHP_EOL.'========================='.PHP_EOL, FILE_APPEND);
+
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
             $self->session_id =  hexdec( $u['h6'].$u['h5'] );
@@ -47,6 +48,7 @@
     
     function zkgetuser($self) {
         $command = CMD_USERTEMP_RRQ;
+        // $command = CMD_DB_RRQ;
         $command_string = chr(5);
         $chksum = 0;
         $session_id = $self->session_id;
@@ -60,7 +62,8 @@
         
         try {
             @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
-            
+//            file_put_contents('read_user_binary_log', $self->data_recv.'========', FILE_APPEND);
+
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
             if ( getSizeUser($self) ) {
@@ -68,12 +71,15 @@
                 
                 while ( $bytes > 0 ) {
                     @socket_recvfrom($self->zkclient, $data_recv, 1032, 0, $self->ip, $self->port);
+//                    file_put_contents('read_user_binary_log', $data_recv.'========', FILE_APPEND);
                     array_push( $self->userdata, $data_recv);
                     $bytes -= 1024;
                 }
                 
                 $self->session_id =  hexdec( $u['h6'].$u['h5'] );
                 @socket_recvfrom($self->zkclient, $data_recv, 1024, 0, $self->ip, $self->port);
+//                file_put_contents('read_user_binary_log', $data_recv.'========', FILE_APPEND);
+
             }
             
             
@@ -129,6 +135,32 @@
         }
     }
     
+    function zkgetfp($self) {
+        $command = chr(227).chr(17).chr(18);
+        // $command = CMD_DB_RRQ;
+        $command_string = chr(80).chr(16).chr(3).chr(253).chr(132).chr(64).chr(0).chr(0);
+        $chksum = 0;
+        $session_id = $self->session_id;
+        
+        $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr( $self->data_recv, 0, 8) );
+        $reply_id = hexdec( $u['h8'].$u['h7'] );
+
+        $buf = $self->createHeader($command, $chksum, $session_id, $reply_id, $command_string);
+//        file_put_contents('request_finger', $self->data_recv.'========', FILE_APPEND);
+        socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
+        
+        try {
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+//            file_put_contents('read_finger', $self->data_recv.'========', FILE_APPEND);
+            
+            return '';
+        } catch(ErrorException $e) {
+            return FALSE;
+        } catch(exception $e) {
+            return False;
+        }
+    }
+
     function zkclearuser($self) {
         $command = CMD_CLEAR_DATA;
         $command_string = '';
