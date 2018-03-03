@@ -18,9 +18,10 @@
     function zksetuser($self, $uid, $userid, $name, $password, $role) {
         $command = CMD_SET_USER;
         // $command_string = str_pad(chr( $uid ), 2, chr(0)).chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
-        $byte1 = chr((int)($uid % 256));
-        $byte2 = chr((int)($uid >> 8));
-        $command_string = $byte1.$byte2.chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        // $byte1 = chr((int)($uid % 256));
+        // $byte2 = chr((int)($uid >> 8));
+        // $command_string = $byte1.$byte2.chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        $command_string = pack('axaa8a28aa7xa8a16', chr($uid), chr($role), $password, $name, chr(1), '', $userid, '');
         $chksum = 0;
         $session_id = $self->session_id;
         
