@@ -100,8 +100,8 @@
                 <th>UID</th>
                 <th>ID</th>
                 <th>Status</th>
-                <th>Tanggal</th>
-                <th>Jam</th>
+                <th>Date</th>
+                <th>Time</th>
             </tr>
             <?php
             $attendance = $zk->getAttendance();
@@ -167,8 +167,8 @@
 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'Index: '</span><span style='color:#808030;'>.</span><span style='color:#797997;'>$idx</span><span style='color:#800080;'>;</span><span></span>
 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'ID: '</span><span style='color:#808030;'>.</span><span style='color:#797997;'>$attendancedata</span><span style='color:#808030;'>[</span><span style='color:#008c00;'>0</span><span style='color:#808030;'>]</span><span style='color:#800080;'>;</span><span></span>
 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'Status: '</span><span style='color:#808030;'>.</span><span style='color:#797997;'>$attendancedata</span><span style='color:#808030;'>[</span><span style='color:#008c00;'>1</span><span style='color:#808030;'>]</span><span style='color:#800080;'>;</span><span></span>
-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'Tanggal: '</span><span style='color:#808030;'>.</span><span style='color:#400000;'>date</span><span style='color:#808030;'>(</span><span style='color:#0000e6;'>"d-m-Y"</span><span style='color:#808030;'>,</span><span> </span><span style='color:#400000;'>strtotime</span><span style='color:#808030;'>(</span><span style='color:#797997;'>$attendancedata</span><span style='color:#808030;'>[</span><span style='color:#008c00;'>2</span><span style='color:#808030;'>]</span><span style='color:#808030;'>)</span><span style='color:#808030;'>)</span><span style='color:#800080;'>;</span><span></span>
-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'Jam: '</span><span style='color:#808030;'>.</span><span style='color:#400000;'>date</span><span style='color:#808030;'>(</span><span style='color:#0000e6;'>"H:i:s"</span><span style='color:#808030;'>,</span><span> </span><span style='color:#400000;'>strtotime</span><span style='color:#808030;'>(</span><span style='color:#797997;'>$attendancedata</span><span style='color:#808030;'>[</span><span style='color:#008c00;'>2</span><span style='color:#808030;'>]</span><span style='color:#808030;'>)</span><span style='color:#808030;'>)</span><span style='color:#800080;'>;</span><span></span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'Date: '</span><span style='color:#808030;'>.</span><span style='color:#400000;'>date</span><span style='color:#808030;'>(</span><span style='color:#0000e6;'>"d-m-Y"</span><span style='color:#808030;'>,</span><span> </span><span style='color:#400000;'>strtotime</span><span style='color:#808030;'>(</span><span style='color:#797997;'>$attendancedata</span><span style='color:#808030;'>[</span><span style='color:#008c00;'>2</span><span style='color:#808030;'>]</span><span style='color:#808030;'>)</span><span style='color:#808030;'>)</span><span style='color:#800080;'>;</span><span></span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800000;font-weight:bold; '>echo</span><span> </span><span style='color:#0000e6;'>'Time: '</span><span style='color:#808030;'>.</span><span style='color:#400000;'>date</span><span style='color:#808030;'>(</span><span style='color:#0000e6;'>"H:i:s"</span><span style='color:#808030;'>,</span><span> </span><span style='color:#400000;'>strtotime</span><span style='color:#808030;'>(</span><span style='color:#797997;'>$attendancedata</span><span style='color:#808030;'>[</span><span style='color:#008c00;'>2</span><span style='color:#808030;'>]</span><span style='color:#808030;'>)</span><span style='color:#808030;'>)</span><span style='color:#800080;'>;</span><span></span>
 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#800080;'>}</span><span></span>
 <span></span>
 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='color:#797997;'>$zk</span><span style='color:#808030;'>-</span><span style='color:#808030;'>></span><span>getTime</span><span style='color:#808030;'>(</span><span style='color:#808030;'>)</span><span style='color:#800080;'>;</span><span></span>
@@ -180,6 +180,7 @@
         </fieldset>
     <?php
         $zk->enrollUser('123');
+        $zk->setUser(123, '123', 'Shubhamoy Chakrabarty', '', LEVEL_USER);
         $zk->enableDevice();
         sleep(1);
         $zk->disconnect();
