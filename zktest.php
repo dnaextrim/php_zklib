@@ -179,6 +179,7 @@
         
         </fieldset>
     <?php
+        $zk->enrollUser('123');
         $zk->enableDevice();
         sleep(1);
         $zk->disconnect();
