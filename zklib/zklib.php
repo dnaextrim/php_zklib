@@ -218,6 +218,10 @@
         public function getTime() {
             return zkgettime($this);
         }
+
+        public function enrollUser($userid) {
+            return zkenrolluser($this, $userid);
+        }
         
     }
 ?>
