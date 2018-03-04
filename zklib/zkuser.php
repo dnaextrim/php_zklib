@@ -18,9 +18,10 @@
     function zksetuser($self, $uid, $userid, $name, $password, $role) {
         $command = CMD_SET_USER;
         // $command_string = str_pad(chr( $uid ), 2, chr(0)).chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
-        $byte1 = chr((int)($uid % 256));
-        $byte2 = chr((int)($uid >> 8));
-        $command_string = $byte1.$byte2.chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        // $byte1 = chr((int)($uid % 256));
+        // $byte2 = chr((int)($uid >> 8));
+        // $command_string = $byte1.$byte2.chr($role).str_pad($password, 8, chr(0)).str_pad($name, 28, chr(0)).str_pad(chr(1), 9, chr(0)).str_pad($userid, 8, chr(0)).str_repeat(chr(0),16);
+        $command_string = pack('axaa8a28aa7xa8a16', chr($uid), chr($role), $password, $name, chr(1), '', $userid, '');
         $chksum = 0;
         $session_id = $self->session_id;
         
@@ -206,6 +207,33 @@
             
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
             
+            $self->session_id =  hexdec( $u['h6'].$u['h5'] );
+            return substr( $self->data_recv, 8 );
+        } catch(ErrorException $e) {
+            return FALSE;
+        } catch(exception $e) {
+            return False;
+        }
+    }
+
+    function zkenrolluser($self, $userid) {
+        $command = CMD_STARTENROLL;
+        $command_string = pack("a*", $userid);
+        $chksum = 0;
+        $session_id = $self->session_id;
+
+        $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr( $self->data_recv, 0, 8) );
+        $reply_id = hexdec( $u['h8'].$u['h7'] );
+
+        $buf = $self->createHeader($command, $chksum, $session_id, $reply_id, $command_string);
+
+        socket_sendto($self->zkclient, $buf, strlen($buf), 0, $self->ip, $self->port);
+
+        try {
+            @socket_recvfrom($self->zkclient, $self->data_recv, 1024, 0, $self->ip, $self->port);
+
+            $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr( $self->data_recv, 0, 8 ) );
+
             $self->session_id =  hexdec( $u['h6'].$u['h5'] );
             return substr( $self->data_recv, 8 );
         } catch(ErrorException $e) {
